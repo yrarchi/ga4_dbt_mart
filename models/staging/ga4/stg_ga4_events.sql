@@ -1,5 +1,5 @@
-{% set start_date = var('start_date', date_sub(current_date(), interval 30 day) | string) %}
-{% set end_date = var('end_date', current_date() | string) %}
+{% set start_date = var('start_date', (modules.datetime.date.today() - modules.datetime.timedelta(days=30)).isoformat()) %}
+{% set end_date = var('end_date', modules.datetime.date.today().isoformat()) %}
 
 WITH base AS (
   SELECT
