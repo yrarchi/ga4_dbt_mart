@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: ga4
+    description: GA4 の生データ（BigQuery 連携イベント）
+    schema: "{{ var('ga4_dataset', 'analytics_XXXXXX') }}"
+    tables:
+      - name: events
+        description: GA4のイベント生ログ
+        identifier: events_*
