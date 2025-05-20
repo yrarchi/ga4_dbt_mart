@@ -1,0 +1,61 @@
+version: 2
+
+models:
+  - name: stg_ga4_events
+    description: >
+      GA4のeventsテーブルから、event_paramsを横持ち展開し、主要なパラメータとユーザー・デバイス・トラフィック情報を含むステージングモデル。
+    columns:
+      - name: event_date
+        description: イベントの日付（GA4 プロパティのタイムゾーンに基づく）
+        tests:
+          - not_null
+
+      - name: event_name
+        description: "イベント名（例: page_view, session_startなど）"
+        tests:
+          - not_null
+
+      - name: event_at
+        description: "イベント発生時刻（マイクロ秒をTimestamp変換）"
+
+      - name: first_touch_at
+        description: "ユーザーが初めて接触したタイミング（マイクロ秒をTimestamp変換）"
+
+      - name: event_bundle_sequence_id
+        description: "同一セッション内のイベント順序を表すID"
+
+      - name: first_touch_source
+        description: "ユーザーが初めて接触した際のトラフィックソース（例: google, direct）"
+
+      - name: first_touch_medium
+        description: "ユーザーが初めて接触した際のメディアタイプ（例: organic, cpc）"
+
+      - name: first_touch_campaign
+        description: "ユーザーが初めて接触した際のキャンペーン名"
+
+      - name: device_category
+        description: "ユーザーのデバイスカテゴリ（例: mobile, desktop, tablet）"
+
+      - name: device_os
+        description: "ユーザーのデバイスのOS名（例: iOS, Android）"
+
+      - name: page_location
+        description: "ページのURL（event_paramsから抽出）"
+
+      - name: page_title
+        description: "ページのタイトル（event_paramsから抽出）"
+
+      - name: session_engaged
+        description: "セッションがエンゲージされているか（true/falseの文字列）"
+
+      - name: event_param_source
+        description: "event発生時のトラフィックソース"
+
+      - name: event_param_medium
+        description: "event発生時のメディアタイプ"
+
+      - name: campaign
+        description: "event発生時のキャンペーン名"
+
+      - name: engagement_time_msec
+        description: "セッション中のエンゲージメント時間（ミリ秒、整数）"
