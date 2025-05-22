@@ -18,14 +18,23 @@ GA4 → BigQuery にエクスポートされたデータをもとに、セッシ
 
 ## 🚀 セットアップ手順
 
+### 1. 仮想環境に入る
 ```bash
-# 仮想環境に入る
 poetry install
 poetry shell
+```
 
-# 接続確認
+### 2. pre-commit フックを有効化する（初回のみ）
+```bash
+pre-commit install
+```
+
+### 3. 接続確認
+```bash
 dbt debug
+```
 
-# モデル実行
+### 4. モデルを実行
+```bash
 dbt run
 ```
