@@ -26,3 +26,4 @@ repos:
       - id: yamllint
         args: [--strict]
         files: \.(yml|yaml)$
+        exclude: ^\.github/
