@@ -15,6 +15,8 @@ WITH base AS (
         events.device.category AS device_category,
         events.device.operating_system AS device_os,
 
+        events.session_traffic_source_last_click AS last_click,
+
         event_params.key,
         event_params.value.string_value,
         event_params.value.int_value,
@@ -32,9 +34,6 @@ WITH base AS (
             'page_title',
             'session_engaged',
             'engagement_time_msec',
-            'source',
-            'medium',
-            'campaign',
             'ga_session_id'
         )
 )
@@ -54,12 +53,22 @@ SELECT
     device_category,
     device_os,
 
+    COALESCE(
+        last_click.manual_campaign.source,
+        last_click.cross_channel_campaign.source
+    ) AS session_source,
+    COALESCE(
+        last_click.manual_campaign.medium,
+        last_click.cross_channel_campaign.medium
+    ) AS session_medium,
+    COALESCE(
+        last_click.manual_campaign.campaign_name,
+        last_click.cross_channel_campaign.campaign_name
+    ) AS session_campaign,
+
     MAX(IF(key = 'page_location', string_value, NULL)) AS page_location,
     MAX(IF(key = 'page_title', string_value, NULL)) AS page_title,
     MAX(IF(key = 'session_engaged', string_value, NULL)) AS session_engaged,
-    MAX(IF(key = 'source', string_value, NULL)) AS event_param_source,
-    MAX(IF(key = 'medium', string_value, NULL)) AS event_param_medium,
-    MAX(IF(key = 'campaign', string_value, NULL)) AS campaign,
     MAX(IF(key = 'ga_session_id', int_value, NULL)) AS ga_session_id,
     MAX(
         IF(
@@ -78,5 +87,8 @@ GROUP BY
     first_touch_source,
     first_touch_medium,
     first_touch_campaign,
+    session_source,
+    session_medium,
+    session_campaign,
     device_category,
     device_os
