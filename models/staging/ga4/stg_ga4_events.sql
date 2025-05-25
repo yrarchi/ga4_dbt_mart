@@ -6,6 +6,7 @@ WITH base AS (
         events.event_date,
         events.event_name,
         events.event_bundle_sequence_id,
+        events.user_pseudo_id,
 
         events.traffic_source.source AS first_touch_source,
         events.traffic_source.medium AS first_touch_medium,
@@ -33,7 +34,8 @@ WITH base AS (
             'engagement_time_msec',
             'source',
             'medium',
-            'campaign'
+            'campaign',
+            'ga_session_id'
         )
 )
 
@@ -43,6 +45,7 @@ SELECT
     event_at,
     first_touch_at,
     event_bundle_sequence_id,
+    user_pseudo_id,
 
     first_touch_source,
     first_touch_medium,
@@ -57,6 +60,7 @@ SELECT
     MAX(IF(key = 'source', string_value, NULL)) AS event_param_source,
     MAX(IF(key = 'medium', string_value, NULL)) AS event_param_medium,
     MAX(IF(key = 'campaign', string_value, NULL)) AS campaign,
+    MAX(IF(key = 'ga_session_id', int_value, NULL)) AS ga_session_id,
     MAX(
         IF(
             key = 'engagement_time_msec', int_value, NULL
@@ -70,6 +74,7 @@ GROUP BY
     event_at,
     first_touch_at,
     event_bundle_sequence_id,
+    user_pseudo_id,
     first_touch_source,
     first_touch_medium,
     first_touch_campaign,
