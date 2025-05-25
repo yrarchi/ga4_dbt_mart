@@ -39,6 +39,15 @@ models:
       - name: first_touch_campaign
         description: "ユーザーが初めて接触した際のキャンペーン名"
 
+      - name: session_source
+        description: "セッションのトラフィックソース"
+
+      - name: session_medium
+        description: "セッションのメディアタイプ"
+
+      - name: session_campaign
+        description: "セッションのキャンペーン名"
+
       - name: device_category
         description: "ユーザーのデバイスカテゴリ（例: mobile, desktop, tablet）"
 
@@ -53,15 +62,6 @@ models:
 
       - name: session_engaged
         description: "セッションがエンゲージされているか（true/falseの文字列）"
-
-      - name: event_param_source
-        description: "event発生時のトラフィックソース"
-
-      - name: event_param_medium
-        description: "event発生時のメディアタイプ"
-
-      - name: campaign
-        description: "event発生時のキャンペーン名"
 
       - name: ga_session_id
         description: >
