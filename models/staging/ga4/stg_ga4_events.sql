@@ -33,7 +33,8 @@ WITH base AS (
             'engagement_time_msec',
             'source',
             'medium',
-            'campaign'
+            'campaign',
+            'ga_session_id'
         )
 )
 
@@ -57,6 +58,7 @@ SELECT
     MAX(IF(key = 'source', string_value, NULL)) AS event_param_source,
     MAX(IF(key = 'medium', string_value, NULL)) AS event_param_medium,
     MAX(IF(key = 'campaign', string_value, NULL)) AS campaign,
+    MAX(IF(key = 'ga_session_id', int_value, NULL)) AS ga_session_id,
     MAX(
         IF(
             key = 'engagement_time_msec', int_value, NULL
