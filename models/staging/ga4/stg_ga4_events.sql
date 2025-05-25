@@ -6,6 +6,7 @@ WITH base AS (
         events.event_date,
         events.event_name,
         events.event_bundle_sequence_id,
+        events.user_pseudo_id,
 
         events.traffic_source.source AS first_touch_source,
         events.traffic_source.medium AS first_touch_medium,
@@ -44,6 +45,7 @@ SELECT
     event_at,
     first_touch_at,
     event_bundle_sequence_id,
+    user_pseudo_id,
 
     first_touch_source,
     first_touch_medium,
@@ -72,6 +74,7 @@ GROUP BY
     event_at,
     first_touch_at,
     event_bundle_sequence_id,
+    user_pseudo_id,
     first_touch_source,
     first_touch_medium,
     first_touch_campaign,

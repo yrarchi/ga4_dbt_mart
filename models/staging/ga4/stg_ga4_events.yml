@@ -25,6 +25,11 @@ models:
       - name: event_bundle_sequence_id
         description: "同一セッション内のイベント順序を表すID"
 
+      - name: user_pseudo_id
+        description: >
+          匿名化されたユーザーID。
+          GA4により各ユーザーに割り当てられる識別子で、同一ユーザーの行動を跨るセッション間で関連付けるために使用される。
+
       - name: first_touch_source
         description: "ユーザーが初めて接触した際のトラフィックソース（例: google, direct）"
 
@@ -57,6 +62,11 @@ models:
 
       - name: campaign
         description: "event発生時のキャンペーン名"
+
+      - name: ga_session_id
+        description: >
+          GA4が発行するセッションID。ユーザーごとの訪問単位で一意であり、同一ユーザーの複数セッションに対応する。
+          user_pseudo_idと組み合わせることでグローバルに一意なセッションを識別可能。
 
       - name: engagement_time_msec
         description: "セッション中のエンゲージメント時間（ミリ秒、整数）"
