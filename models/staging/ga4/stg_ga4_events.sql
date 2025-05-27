@@ -3,7 +3,6 @@
 
 WITH base AS (
     SELECT
-        events.event_date,
         events.event_name,
         events.event_bundle_sequence_id,
         events.user_pseudo_id,
@@ -21,6 +20,7 @@ WITH base AS (
         event_params.value.string_value,
         event_params.value.int_value,
 
+        PARSE_DATE('%Y%m%d', events.event_date) AS event_date,
         TIMESTAMP_MICROS(events.event_timestamp) AS event_at,
         TIMESTAMP_MICROS(events.user_first_touch_timestamp) AS first_touch_at
     FROM
