@@ -11,6 +11,8 @@ dbt-bigquery = "^1.9.1"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.2.0"
+sqlfluff-templater-dbt = "^3.4.0"
+dbt-bigquery = "^1.9.2"
 
 [build-system]
 requires = ["poetry-core"]

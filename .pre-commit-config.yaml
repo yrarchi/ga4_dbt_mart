@@ -17,7 +17,13 @@ repos:
     rev: 3.4.0
     hooks:
       - id: sqlfluff-lint
-        args: [--dialect, bigquery, --nocolor]
+        additional_dependencies:
+          - sqlfluff-templater-dbt
+          - dbt-bigquery
+        args:
+          - --dialect=bigquery
+          - --templater=dbt
+          - --nocolor
         files: \.sql$
 
   - repo: https://github.com/adrienverge/yamllint.git
