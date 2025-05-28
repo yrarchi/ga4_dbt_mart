@@ -19,3 +19,5 @@ models:
   ga4_dbt_mart:
     staging:
       +materialized: view
+    intermediate:
+      +materialized: view
