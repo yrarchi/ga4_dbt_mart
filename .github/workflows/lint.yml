@@ -19,6 +19,9 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install pre-commit
+        run: pip install pre-commit
+
       - name: Run sqlfluff (jinja templater only)
         run: |
           pre-commit run sqlfluff-lint-ci --all-files --hook-stage manual
