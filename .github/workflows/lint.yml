@@ -19,10 +19,6 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Prepare dbt profile
+      - name: Run sqlfluff (jinja templater only)
         run: |
-          mkdir -p ~/.dbt
-          cp .github/dbt_profiles_dummy.yml ~/.dbt/profiles.yml
-
-      - name: Run pre-commit hooks
-        uses: pre-commit/action@v3.0.1
+          pre-commit run sqlfluff-lint-ci --all-files --hook-stage manual

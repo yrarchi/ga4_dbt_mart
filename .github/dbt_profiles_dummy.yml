@@ -1,9 +1,0 @@
-ga4_dbt_mart:
-  target: dev
-  outputs:
-    dev:
-      type: bigquery
-      project: dummy
-      dataset: dummy
-      threads: 1
-      method: oauth
