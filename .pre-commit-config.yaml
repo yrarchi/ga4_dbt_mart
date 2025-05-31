@@ -17,8 +17,23 @@ repos:
     rev: 3.4.0
     hooks:
       - id: sqlfluff-lint
-        args: [--dialect, bigquery, --nocolor]
-        files: \.sql$
+        name: sqlfluff lint (dbt templater)
+        args:
+          - --dialect=bigquery
+          - --templater=dbt
+          - --nocolor
+        additional_dependencies:
+          - sqlfluff-templater-dbt
+          - dbt-bigquery
+        stages: [commit]
+
+      - id: sqlfluff-lint
+        name: sqlfluff lint (jinja templater)
+        args:
+          - --dialect=bigquery
+          - --templater=jinja
+          - --nocolor
+        stages: [manual]
 
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.37.1
