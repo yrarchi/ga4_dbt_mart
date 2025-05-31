@@ -24,4 +24,4 @@ jobs:
 
       - name: Run sqlfluff (jinja templater only)
         run: |
-          pre-commit run sqlfluff-lint-ci --all-files --hook-stage manual
+          pre-commit run sqlfluff-lint --all-files --hook-stage manual
