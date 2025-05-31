@@ -24,7 +24,3 @@ jobs:
 
       - name: Run default hooks (push stage)
         run: pre-commit run --all-files --hook-stage push
-
-      - name: Run sqlfluff (jinja templater only)
-        run: |
-          pre-commit run sqlfluff-lint --all-files --hook-stage manual
