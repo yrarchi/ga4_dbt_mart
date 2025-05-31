@@ -1,0 +1,33 @@
+---
+version: 2
+
+models:
+  - name: mart_session_conversions
+    description: "セッション日、流入元、ランディングページ、CVページ、デバイスカテゴリごとにセッション数とCV数を集計したファクトテーブル"
+    columns:
+      - name: session_date
+        description: "セッションの日付"
+        tests:
+          - not_null
+      - name: session_source
+        description: "セッションの流入元"
+        tests:
+          - not_null
+      - name: landing_page_path
+        description: "ランディングページのパス（クエリパラメータなし）"
+        tests:
+          - not_null
+      - name: cv_page_path
+        description: "CVページのパス（クエリパラメータなし）"
+      - name: device_category
+        description: "デバイスカテゴリ（mobile、desktop、tabletなど）"
+        tests:
+          - not_null
+      - name: session_count
+        description: "セッション数"
+        tests:
+          - not_null
+      - name: cv_count
+        description: "CVセッション数"
+        tests:
+          - not_null
