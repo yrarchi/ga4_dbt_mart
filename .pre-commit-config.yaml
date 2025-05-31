@@ -25,6 +25,7 @@ repos:
         additional_dependencies:
           - sqlfluff-templater-dbt
           - dbt-bigquery
+        stages: [commit]
 
       - id: sqlfluff-lint
         name: sqlfluff lint (jinja templater)
