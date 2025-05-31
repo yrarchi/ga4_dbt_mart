@@ -1,0 +1,60 @@
+---
+version: 2
+
+models:
+  - name: int_sessions_aggregated_from_events
+    description: "セッション単位でCV判定等を行う中間モデル"
+    columns:
+      - name: user_pseudo_id
+        description: "匿名化されたユーザーID"
+        tests:
+          - not_null
+
+      - name: ga_session_id
+        description: "GA4が発行するセッションID（user_pseudo_idと組み合わせて一意化）"
+        tests:
+          - not_null
+
+      - name: session_date
+        description: "セッションの発生日（最初のページビューの event_date）"
+        tests:
+          - not_null
+
+      - name: session_campaign
+        description: "セッションの流入元"
+
+      - name: device_category
+        description: "セッションのデバイスカテゴリ"
+        tests:
+          - accepted_values:
+              values: ['mobile', 'desktop', 'tablet']
+
+      - name: landing_page_location
+        description: "セッション初回ページビューのフルURL"
+        tests:
+          - not_null
+
+      - name: landing_page_path
+        description: "ドメイン・クエリパラメータ除去後のランディングページのパス"
+        tests:
+          - not_null
+
+      - name: cv_page_location
+        description: "CVとみなした最初のページのフルURL"
+        tests:
+          - not_null:
+              where: "is_cv = true"
+
+      - name: cv_page_path
+        description: "ドメイン・クエリパラメータ除去後のCVページのパス"
+        tests:
+          - not_null:
+              where: "is_cv = true"
+
+      - name: is_cv
+        description: "セッション内でCVページに到達したかを示すブールフラグ"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+              quote: false
