@@ -77,12 +77,16 @@ jobs:
         if: always()
         uses: slackapi/slack-github-action@v2.1.0
         with:
-          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: >
-              ${{ job.status == 'success' && ':white_check_mark: dbt build succeeded'
-                  || ':x: dbt build failed' }}
-              ${{ github.event_name == 'pull_request' && format('\n• PR: {0}', github.event.pull_request.title) }}
-              ${{ github.event_name == 'schedule' && '\n• Trigger: Scheduled Run' }}
-              ${{ github.event_name == 'workflow_dispatch' && '\n• Trigger: Manual Trigger' }}
+            text: "${{ job.status == 'success' && ':white_check_mark:' || ':x:' }} dbt build ${{ job.status }}"
+            blocks:
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: |
+                    ${{ job.status == 'success' && ':white_check_mark:' || ':x:' }} *dbt build ${{ job.status }}*
+                    ${{ github.event_name == 'pull_request' && '• PR: ' }}${{ github.event.pull_request.title || '' }}
+                    ${{ github.event_name == 'schedule' && '• Trigger: Scheduled Run' }}
+                    ${{ github.event_name == 'workflow_dispatch' && '• Trigger: Manual Trigger' }}
