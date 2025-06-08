@@ -73,6 +73,27 @@ jobs:
               "ga4_dataset": "${GA4_DATASET}"
             }"
 
+      - name: Compose Slack message
+        if: always()
+        id: compose_message
+        run: |
+          if [[ "${{ job.status }}" == "success" ]]; then
+            icon=":white_check_mark:"
+          else
+            icon=":x:"
+          fi
+          message="$icon *dbt build ${{ job.status }}*"
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            message="$message\n• PR: ${{ github.event.pull_request.title }}"
+          elif [[ "${{ github.event_name }}" == "schedule" ]]; then
+            message="$message\n• Trigger: Scheduled Run"
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            message="$message\n• Trigger: Manual Trigger"
+          fi
+          echo "message<<EOF" >> $GITHUB_OUTPUT
+          echo -e "$message" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Notify to Slack
         if: always()
         uses: slackapi/slack-github-action@v2.1.0
@@ -80,13 +101,9 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: "${{ job.status == 'success' && ':white_check_mark:' || ':x:' }} dbt build ${{ job.status }}"
+            text: "${{ steps.compose_message.outputs.icon }} dbt build ${{ job.status }}"
             blocks:
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: |
-                    ${{ job.status == 'success' && ':white_check_mark:' || ':x:' }} *dbt build ${{ job.status }}*
-                    ${{ github.event_name == 'pull_request' && '• PR: ' }}${{ github.event.pull_request.title || '' }}
-                    ${{ github.event_name == 'schedule' && '• Trigger: Scheduled Run' }}
-                    ${{ github.event_name == 'workflow_dispatch' && '• Trigger: Manual Trigger' }}
+                  text: "${{ steps.compose_message.outputs.message }}"
