@@ -101,9 +101,11 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: "${{ steps.compose_message.outputs.icon }} dbt build ${{ job.status }}"
+            text: |
+              ${{ steps.compose_message.outputs.icon }} dbt build ${{ job.status }}
             blocks:
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: "${{ steps.compose_message.outputs.message }}"
+                  text: |
+                    ${{ steps.compose_message.outputs.message }}
