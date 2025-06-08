@@ -1,0 +1,55 @@
+name: dbt build
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  schedule:
+    - cron: '0 1 * * 0'  # JST 10:00 (UTC+9 = UTC 1:00)
+
+jobs:
+  dbt_build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud via OIDC
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: poetry install --no-root
+
+      - name: Set END_DATE to yesterday
+        id: set_end_date
+        run: |
+          echo "yesterday=$(date -u -d '1 day ago' +%Y%m%d)" >> "$GITHUB_OUTPUT"
+
+      - name: Run dbt build
+        env:
+          START_DATE: '20250101'
+          END_DATE: ${{ steps.set_end_date.outputs.yesterday }}
+          GA4_DATASET: ${{ secrets.GA4_DATASET }}
+        run: |
+          poetry run dbt build \
+            --select stg_ga4_events \
+            --vars '{
+              "start_date": "${START_DATE}",
+              "end_date": "${END_DATE}",
+              "ga4_dataset": "${GA4_DATASET}"
+            }'
