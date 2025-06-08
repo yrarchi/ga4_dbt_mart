@@ -54,7 +54,7 @@ jobs:
                 type: bigquery
                 method: oauth
                 project: "${{ secrets.GCP_PROJECT_ID }}"
-                dataset: "${{ secrets.GA4_DATASET }}"
+                dataset: "${{ secrets.PRODUCTION_DATASET }}"
                 threads: 4
                 location: asia-northeast1
             target: default
