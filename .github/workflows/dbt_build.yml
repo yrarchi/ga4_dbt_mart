@@ -67,7 +67,6 @@ jobs:
           GA4_DATASET: ${{ secrets.GA4_DATASET }}
         run: |
           poetry run dbt build \
-            --select stg_ga4_events \
             --vars '{
               "start_date": "${START_DATE}",
               "end_date": "${END_DATE}",
