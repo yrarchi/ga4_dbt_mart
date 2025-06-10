@@ -90,9 +90,7 @@ jobs:
           elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             message="$message\n• Trigger: Manual Trigger"
           fi
-          echo "message<<EOF" >> $GITHUB_OUTPUT
-          echo -e "$message" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          echo "message=$message" >> "$GITHUB_OUTPUT"
 
       - name: Notify to Slack
         if: always()
@@ -102,10 +100,4 @@ jobs:
           webhook-type: incoming-webhook
           payload: |
             text: |
-              ${{ steps.compose_message.outputs.icon }} dbt build ${{ job.status }}
-            blocks:
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: |
-                    ${{ steps.compose_message.outputs.message }}
+              ${{ steps.compose_message.outputs.message }}
