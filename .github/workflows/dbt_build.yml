@@ -77,32 +77,31 @@ jobs:
         if: always()
         id: compose_message
         run: |
-          if [[ "${{ job.status }}" == "success" ]]; then
+          if [ "${{ job.status }}" = "success" ]; then
             icon=":white_check_mark:"
           else
             icon=":x:"
           fi
 
-          message="$icon *dbt build ${{ job.status }}*"
-
           case "${{ github.event_name }}" in
             pull_request)
-              message="$message\n• PR: ${{ github.event.pull_request.title }}"
+              trigger="PR: ${{ github.event.pull_request.title }}"
               ;;
             schedule)
-              message="$message\n• Trigger: Scheduled Run"
+              trigger="Scheduled Run"
               ;;
             workflow_dispatch)
-              message="$message\n• Trigger: Manual Trigger"
+              trigger="Manual Trigger"
               ;;
-            push)
-              message="$message\n• Trigger: Push to `${{ github.ref_name }}`"
+            *)
+              trigger="Push to ${GITHUB_REF_NAME}"
               ;;
           esac
 
-          echo "message<<EOF" >> "$GITHUB_OUTPUT"
-          echo "$message" >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
+          message="${icon} *dbt build ${{ job.status }}*\\n\\n• Trigger: ${trigger}"
+
+          echo "message=${message}" >> "$GITHUB_OUTPUT"
+
 
       - name: Notify to Slack
         if: always()
@@ -116,5 +115,4 @@ jobs:
               - type: section
                 text:
                   type: mrkdwn
-                  text: |
-                    ${{ steps.compose_message.outputs.message }}
+                  text: '${{ steps.compose_message.outputs.message }}'
