@@ -101,7 +101,7 @@ jobs:
           esac
 
           echo "message<<EOF" >> "$GITHUB_OUTPUT"
-          echo -e "$message" >> "$GITHUB_OUTPUT"
+          echo "$message" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
 
       - name: Notify to Slack
