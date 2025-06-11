@@ -82,15 +82,27 @@ jobs:
           else
             icon=":x:"
           fi
+
           message="$icon *dbt build ${{ job.status }}*"
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            message="$message\n• PR: ${{ github.event.pull_request.title }}"
-          elif [[ "${{ github.event_name }}" == "schedule" ]]; then
-            message="$message\n• Trigger: Scheduled Run"
-          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            message="$message\n• Trigger: Manual Trigger"
-          fi
-          echo "message=$message" >> "$GITHUB_OUTPUT"
+
+          case "${{ github.event_name }}" in
+            pull_request)
+              message="$message\n• PR: ${{ github.event.pull_request.title }}"
+              ;;
+            schedule)
+              message="$message\n• Trigger: Scheduled Run"
+              ;;
+            workflow_dispatch)
+              message="$message\n• Trigger: Manual Trigger"
+              ;;
+            push)
+              message="$message\n• Trigger: Push to `${{ github.ref_name }}`"
+              ;;
+          esac
+
+          echo "message<<EOF" >> "$GITHUB_OUTPUT"
+          echo -e "$message" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
 
       - name: Notify to Slack
         if: always()
@@ -99,5 +111,10 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: |
-              ${{ steps.compose_message.outputs.message }}
+            text: "dbt build ${{ job.status }}"
+            blocks:
+              - type: section
+                text:
+                  type: mrkdwn
+                  text: |
+                    ${{ steps.compose_message.outputs.message }}
