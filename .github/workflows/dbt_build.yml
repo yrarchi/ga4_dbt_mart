@@ -73,6 +73,36 @@ jobs:
               "ga4_dataset": "${GA4_DATASET}"
             }"
 
+      - name: Compose Slack message
+        if: always()
+        id: compose_message
+        shell: bash
+        run: |
+          set -e
+          if [ "${{ job.status }}" = "success" ]; then
+            icon=":white_check_mark:"
+          else
+            icon=":x:"
+          fi
+
+          case "${{ github.event_name }}" in
+            pull_request)      trigger="PR: ${{ github.event.pull_request.title }}" ;;
+            schedule)          trigger="Scheduled Run" ;;
+            workflow_dispatch) trigger="Manual Trigger" ;;
+            *)                 trigger="Push to ${GITHUB_REF_NAME}" ;;
+          esac
+
+          raw_message="$(printf '%s *dbt build %s*\n\n• Trigger: %s' \
+                          "$icon" "${{ job.status }}" "$trigger")"
+
+          indented_message="$(echo "$raw_message" | sed '2,$s/^/            /')"
+
+          {
+            echo 'message<<EOF'
+            echo "$indented_message"
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
+
       - name: Notify to Slack
         if: always()
         uses: slackapi/slack-github-action@v2.1.0
@@ -80,13 +110,10 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: "${{ job.status == 'success' && ':white_check_mark:' || ':x:' }} dbt build ${{ job.status }}"
+            text: "dbt build ${{ job.status }}"
             blocks:
-              - type: "section"
+              - type: section
                 text:
-                  type: "mrkdwn"
+                  type: mrkdwn
                   text: |
-                    ${{ job.status == 'success' && ':white_check_mark:' || ':x:' }} *dbt build ${{ job.status }}*
-                    ${{ github.event_name == 'pull_request' && '• PR: ' }}${{ github.event.pull_request.title || '' }}
-                    ${{ github.event_name == 'schedule' && '• Trigger: Scheduled Run' }}
-                    ${{ github.event_name == 'workflow_dispatch' && '• Trigger: Manual Trigger' }}
+                    ${{ steps.compose_message.outputs.message }}
