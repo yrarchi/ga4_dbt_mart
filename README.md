@@ -10,7 +10,7 @@ GitHub Actions によって定期的に `dbt build` および `dbt test` が実�
 ## ディレクトリ構成
 ```bash
 models/
-  staging/       # GA4の `event_params` や `user_properties` を整形・横持ち化
+  staging/       # GA4の event_params や user_properties を整形・横持ち化
   intermediate/  # セッション単位などの分析軸で集約
   marts/         # 可視化・レポート用の指標を整備（例：CV数、流入チャネル別集計）
 
@@ -18,7 +18,7 @@ macros/          # カスタムマクロ類
 tests/           # dbt singular test 定義
 
 .github/
-  workflows      # dbt run を定期実行、push時にlintを実行
+  workflows      # dbt run を定期実行、push 時に lint を実行
 ```
 
 ![lineage_graph](docs/lineage_graph.png)
