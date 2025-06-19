@@ -23,6 +23,15 @@ tests/           # dbt singular test 定義
 
 ![lineage_graph](docs/lineage_graph.png)
 
+<details>
+<summary>📊 ダッシュボード例</summary>
+
+![dashboard](docs/dashboard.png)  
+※ GA4のイベントデータをもとに、デバイス別のセッション・CV数・CVRを日次で可視化したダッシュボードです。  
+流入チャネルやLP別のパフォーマンス比較にも対応しており、CVR変動の要因分析や施策効果の確認に活用できます。
+
+</details>
+
 ## 使用技術・ライブラリ
 
 - Python 3.11
